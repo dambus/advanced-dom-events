@@ -1,15 +1,19 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
+//////////////////////////////////////////////////////
+//////////       ELEMENT SELECTION      //////////////
+//////////////////////////////////////////////////////
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
-
-// selecting elements
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
 const header = document.querySelector('.header');
+
+//////////////////////////////////////////////////////
+///////////////       MODAL WINDOW      //////////////
+//////////////////////////////////////////////////////
 
 const openModal = function () {
   modal.classList.remove('hidden');
@@ -33,6 +37,45 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+//////////////////////////////////////////////////////
+///////////////       SCROLLING      /////////////////
+//////////////////////////////////////////////////////
+btnScrollTo.addEventListener('click', function (e) {
+  const s1coords = section1.getBoundingClientRect();
+
+  //getting coordinate information
+  console.log(e.target.getBoundingClientRect());
+  console.log('Current scroll (X/Y): ', window.scrollX, window.scrollY);
+  //height and width of viewport
+  console.log(
+    'height/width of viewport:',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+  //SCROLLING
+  // window.scrollTo(s1coords.left, s1coords.top + window.scrollY);
+  // uvek uzeti u obzir trenutnu scroll poziciju, odnosno dodati je na .top poziciju da bi uvek bio isti rezultat skrolovanja sa bilo koje trenutne pozicije
+
+  //SCROLLING SMOOTH
+  // window.scrollTo({
+  //   left: s1coords.left + window.scrollX,
+  //   top: s1coords.top + window.scrollY,
+  //   behavior: 'smooth',
+  // });
+
+  section1.scrollIntoView({ behavior: 'smooth' }); //MODERNI NACIN, ako ne rade na starom browseru, koristiti prethodni nacin
+});
+//////////////////////////////////////////////////////
+//////////       PAGE NAVIGATION       ///////////////
+//////////////////////////////////////////////////////
+document.querySelectorAll('.nav__link').forEach(function (el) {
+  el.addEventListener('click', function (e) {
+    e.preventDefault();
+    const id = this.getAttribute('href');
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  });
+});
+//////////////////////////////////////////////////////
 // KREIRANJE I BRISANJE HTML ELEMENATA
 // creating and inserting elements
 const message = document.createElement('div');
@@ -98,35 +141,6 @@ logo.classList.toggle('c');
 logo.classList.contains('c');
 logo.className = 'ime nove klase'; // ne koristiti jer brise sve postojece klase elementa
 
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
-
-btnScrollTo.addEventListener('click', function (e) {
-  const s1coords = section1.getBoundingClientRect();
-
-  //getting coordinate information
-  console.log(e.target.getBoundingClientRect());
-  console.log('Current scroll (X/Y): ', window.scrollX, window.scrollY);
-  //height and width of viewport
-  console.log(
-    'height/width of viewport:',
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
-  //SCROLLING
-  // window.scrollTo(s1coords.left, s1coords.top + window.scrollY);
-  // uvek uzeti u obzir trenutnu scroll poziciju, odnosno dodati je na .top poziciju da bi uvek bio isti rezultat skrolovanja sa bilo koje trenutne pozicije
-
-  //SCROLLING SMOOTH
-  // window.scrollTo({
-  //   left: s1coords.left + window.scrollX,
-  //   top: s1coords.top + window.scrollY,
-  //   behavior: 'smooth',
-  // });
-
-  section1.scrollIntoView({ behavior: 'smooth' }); //MODERNI NACIN, ako ne rade na sarom browseru, koristiti prethodni nacin
-});
-
 //EVENTS
 
 const h1 = document.querySelector('h1');
@@ -137,3 +151,30 @@ h1.addEventListener('mouseenter', function (e) {
 h1.onmouseenter = function (e) {
   // alert('addEventListener: Great! You are reading the heading');
 };
+
+// EVENT PROPAGATION
+
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
+const randomColor = () =>
+  `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+console.log(randomColor(0, 255));
+
+// document.querySelector('.nav__link').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor(0, 255);
+//   console.log('LINK', e.target, e.currentTarget);
+
+//   // STOP EVENT PROPAGATION
+//   e.stopPropagation();
+// });
+
+// document.querySelector('.nav__links').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor(0, 255);
+//   console.log('CONTAINER', e.target, e.currentTarget);
+// });
+
+// document.querySelector('.nav').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor(0, 255);
+//   console.log('NAV', e.target, e.currentTarget);
+// });
