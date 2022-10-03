@@ -44,15 +44,15 @@ document.addEventListener('keydown', function (e) {
 btnScrollTo.addEventListener('click', function (e) {
   const s1coords = section1.getBoundingClientRect();
 
-  //getting coordinate information
-  console.log(e.target.getBoundingClientRect());
-  console.log('Current scroll (X/Y): ', window.scrollX, window.scrollY);
-  //height and width of viewport
-  console.log(
-    'height/width of viewport:',
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
+  // //getting coordinate information
+  // console.log(e.target.getBoundingClientRect());
+  // console.log('Current scroll (X/Y): ', window.scrollX, window.scrollY);
+  // //height and width of viewport
+  window.scrollTo({
+    left: s1coords.left + window.scrollX,
+    top: s1coords.top + window.scrollY,
+    behavior: 'smooth',
+  });
 });
 
 //////////////////////////////////////////////////////
@@ -80,19 +80,34 @@ tabsContainer.addEventListener('click', function (e) {
 //////////////////////////////////////////////////////
 ////////////     MENU FADE ANIMATION     /////////////
 //////////////////////////////////////////////////////
-nav.addEventListener('mouseover', function (e) {
+const handleHover = function (e, opacity) {
   if (e.target.classList.contains('nav__link')) {
     const link = e.target;
     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
     const logo = link.closest('.nav').querySelector('img');
 
     siblings.forEach(el => {
-      if (el !== link) el.style.opacity = 0.5;
+      if (el !== link) el.style.opacity = this;
     });
-    logo.style.opacity = 0.5;
+    logo.style.opacity = this;
+  }
+};
+
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
+
+//////////////////////////////////////////////////////
+////////////      STICKY NAVIGATION      /////////////
+//////////////////////////////////////////////////////
+const initialCoords = section1.getBoundingClientRect();
+
+window.addEventListener('scroll', function () {
+  if (window.scrollY > initialCoords.top) {
+    nav.classList.add('sticky');
+  } else {
+    nav.classList.remove('sticky');
   }
 });
-nav.addEventListener('mouseout', function (e) {});
 // REFERENCE CLASSES
 //SCROLLING
 // window.scrollTo(s1coords.left, s1coords.top + window.scrollY);
@@ -105,7 +120,7 @@ nav.addEventListener('mouseout', function (e) {});
 //   behavior: 'smooth',
 // });
 
-section1.scrollIntoView({ behavior: 'smooth' }); //MODERNI NACIN, ako ne rade na starom browseru, koristiti prethodni nacin
+//section1.scrollIntoView({ behavior: 'smooth' }); //MODERNI NACIN, ako ne rade na starom browseru, koristiti prethodni nacin
 
 //////////////////////////////////////////////////////
 //////////       PAGE NAVIGATION       ///////////////
@@ -145,63 +160,63 @@ document
 // STYLES ATTRIBUTES AND CLASSES
 // STYLES
 message.style.backgroundColor = '#37383d';
-message.style.width = '98vw';
+message.style.width = '100%';
 
-console.log(message.style.height); //ne prikazuje nista
-console.log(getComputedStyle(message).color); //prikazuje vrednost iz stylesheet-a
-console.log(getComputedStyle(message).height);
+// console.log(message.style.height); //ne prikazuje nista
+// console.log(getComputedStyle(message).color); //prikazuje vrednost iz stylesheet-a
+// console.log(getComputedStyle(message).height);
 
 // CHANGING style - uzivo, getcomputedsyle vraca STRING kao rezultat (50px), a da bi se njegova vrednost menjala, mora se dodati parseFloat, u decimalnom sistemu
 message.style.height =
   Number.parseFloat(getComputedStyle(message).height, 10) + 40 + 'px';
 
 // CHANGING root properties of stylesheet
-document.documentElement.style.setProperty('--color-primary', 'orangered');
+// document.documentElement.style.setProperty('--color-primary', 'orangered');
 
 // ATTRIBUTES
-const logo = document.querySelector('.nav__logo');
-console.log(logo.src);
-console.log(logo.alt);
-console.log(logo.className);
+// const logo = document.querySelector('.nav__logo');
+// console.log(logo.src);
+// console.log(logo.alt);
+// console.log(logo.className);
 
-//Non-standard attributes (custom atributes)
-console.log(logo.designer); // returns undefined, custom atribute
-console.log(logo.getAttribute('designer')); //retunrs right attribute
+// //Non-standard attributes (custom atributes)
+// console.log(logo.designer); // returns undefined, custom atribute
+// console.log(logo.getAttribute('designer')); //retunrs right attribute
 
-//Attributes can be set through JS
-logo.alt = 'Beautiful minimalist logo';
-console.log(logo.alt);
-logo.setAttribute('company', 'bankist'); //non-standard attributes
+// //Attributes can be set through JS
+// logo.alt = 'Beautiful minimalist logo';
+// console.log(logo.alt);
+// logo.setAttribute('company', 'bankist'); //non-standard attributes
 
-// data attributes (data-*)
-console.log(logo.dataset.versionNumber); // u html pise data-version-number, ali se ovde pretvara u camelCase, sta god da pise iza data-*
+// // data attributes (data-*)
+// console.log(logo.dataset.versionNumber); // u html pise data-version-number, ali se ovde pretvara u camelCase, sta god da pise iza data-*
 
-// CLASSES
-logo.classList.add('c');
-logo.classList.remove('c');
-logo.classList.toggle('c');
-logo.classList.contains('c');
-logo.className = 'ime nove klase'; // ne koristiti jer brise sve postojece klase elementa
+// // CLASSES
+// logo.classList.add('c');
+// logo.classList.remove('c');
+// logo.classList.toggle('c');
+// logo.classList.contains('c');
+// logo.className = 'ime nove klase'; // ne koristiti jer brise sve postojece klase elementa
 
-//EVENTS
+// //EVENTS
 
-const h1 = document.querySelector('h1');
+// const h1 = document.querySelector('h1');
 
-h1.addEventListener('mouseenter', function (e) {
-  // alert('addEventListener: Great! You are reading the heading');
-});
-h1.onmouseenter = function (e) {
-  // alert('addEventListener: Great! You are reading the heading');
-};
+// h1.addEventListener('mouseenter', function (e) {
+//   // alert('addEventListener: Great! You are reading the heading');
+// });
+// h1.onmouseenter = function (e) {
+//   // alert('addEventListener: Great! You are reading the heading');
+// };
 
-// EVENT PROPAGATION
+// // EVENT PROPAGATION
 
-const randomInt = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1) + min);
+// const randomInt = (min, max) =>
+//   Math.floor(Math.random() * (max - min + 1) + min);
 
-const randomColor = () =>
-  `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
-console.log(randomColor(0, 255));
+// const randomColor = () =>
+//   `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+// console.log(randomColor(0, 255));
 
 // document.querySelector('.nav__link').addEventListener('click', function (e) {
 //   this.style.backgroundColor = randomColor(0, 255);
